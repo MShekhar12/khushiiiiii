@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Which car do u choose?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 80px;
+      font-family: "Trebuchet MS", "Segoe UI", cursive, sans-serif;
+      background: radial-gradient(circle at 30% 20%, #7a1e2c 0%, #5a0f1f 50%, #2e050d 100%);
+      color: #ffe6ec;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(0,0,0,0.35));
+      pointer-events: none;
+    }
+
+    /* floating brown hearts */
+    .bg-heart {
+      position: fixed;
+      bottom: -30px;
+      font-size: 30px;
+      opacity: 0.45;
+      pointer-events: none;
+      animation: heartRise linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes heartRise {
+      from { transform: translateY(0) scale(0.9); }
+      to { transform: translateY(-110vh) scale(1.8); opacity: 0; }
+    }
+
+    h1 {
+      font-size: 44px;
+      letter-spacing: 1px;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, #fff0f3, #ffd6de);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 14px 36px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+
+    .iconRow {
+      display: flex;
+      gap: 64px;
+      z-index: 2;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .imgBtn {
+      width: 170px;
+      height: 140px;
+      border-radius: 26px;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 22px 48px rgba(0,0,0,0.55);
+      transition: all 0.28s ease;
+    }
+
+    .imgBtn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .imgBtn:hover {
+      transform: translateY(-12px) scale(1.12);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
+    }
+
+    /* -------- QUIZ (CAR 1) -------- */
+    .quiz {
+      display: none;
+      z-index: 3;
+      width: 92%;
+      max-width: 620px;
+      padding: 36px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .qText { font-size: 22px; margin-bottom: 22px; min-height: 60px; }
+    .optRow { display: flex; flex-direction: column; gap: 12px; }
+
+    .optBtn {
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      background: linear-gradient(135deg, #ffe3e8, #ffffff);
+      color: #7a1e2c;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+      transition: all 0.2s ease;
+    }
+    .optBtn:hover { transform: translateY(-2px) scale(1.04); }
+
+    .wrong { margin-top: 10px; color: #ffd1dc; font-weight: 700; min-height: 24px; }
+
+    textarea {
+      width: 100%; height: 110px; border-radius: 14px; border: none;
+      padding: 12px; font-family: inherit; resize: none; font-size: 14px;
+    }
+
+    /* -------- CONTRACT (CAR 2) -------- */
+    .contract {
+      display: none;
+      z-index: 3;
+      width: 92%;
+      max-width: 700px;
+      padding: 40px;
+      border-radius: 20px;
+      background: #fff8fa;
+      color: #3a0f18;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .contract h2 { text-align: center; margin-top: 0; letter-spacing: 1px; }
+    .clause { margin: 10px 0; font-size: 16px; }
+
+    .signLine {
+      margin-top: 12px;
+      border-bottom: 2px solid #3a0f18;
+      width: 260px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .signed { font-family: cursive; font-size: 20px; }
+
+    /* -------- LETTER (CAR 3) -------- */
+    .letterBox {
+      display: none;
+      z-index: 3;
+      width: 92%;
+      max-width: 720px;
+      padding: 46px 50px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff1f5, #ffe3ea);
+      color: #4a0f1f;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+      line-height: 1.8;
+      font-size: 18px;
+      position: relative;
+      max-height: 70vh;
+      overflow-y: auto;
+      align-self: center;
+      margin-top: 10px;
+      margin-bottom: 60px;
+    }
+
+    .letterTitle {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+
+    .backArrow {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      font-size: 26px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #musicBtn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      padding: 14px 22px;
+      font-size: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.95);
+      color: #7a1e2c;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      border: 1px solid rgba(122,30,44,0.4);
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    .confetti { position: fixed; width: 8px; height: 8px; top: -10px; animation: fall 900ms linear forwards; z-index: 10; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+  </style>
+</head>
+<body>
+
+<h1 id="title">which car do u choose?</h1>
+
+<div class="iconRow" id="carRow">
+  <button class="imgBtn" onclick="startQuiz()"><img src="car1.jpg"></button>
+  <button class="imgBtn" onclick="startContract()"><img src="car2.jpg"></button>
+  <button class="imgBtn" onclick="startLetter()"><img src="car3.jpg"></button>
+</div>
+
+<!-- CAR 1 QUIZ -->
+<div class="quiz" id="quizBox">
+  <div class="qText" id="qText"></div>
+  <div class="optRow" id="optRow"></div>
+  <div class="wrong" id="wrongMsg"></div>
+</div>
+
+<!-- CAR 2 CONTRACT -->
+<div class="contract" id="contractBox">
+  <h2>Misshi Agreement </h2>
+  <div class="clause"><label><input type="checkbox"> I agree to love you forever.</label></div>
+  <div class="clause"><label><input type="checkbox"> I agree to laugh at your unfunny jokes.</label></div>
+  <div class="clause"><label><input type="checkbox"> I agree to watch Barça matches with you.</label></div>
+  <div class="clause"><label><input type="checkbox"> I agree to watch Spider-Man movies with you.</label></div>
+  <div class="clause"><label><input type="checkbox"> I agree to tell you when something is bothering me.</label></div>
+  <div class="clause"><label><input type="checkbox"> I agree to keep suspicious boys at least one inch away from my aura.</label></div>
+
+  <p>
+    I, Khushi aka Kajjuu, being in full possession of my senses, hereby agree and promise to follow all the above
+    statements and to faithfully abide by my words and commitments declared herein.
+  </p>
+
+  Signature (click to sign):
+  <div class="signLine" id="signBox">signature</div>
+</div>
+
+<!-- CAR 3 LETTER -->
+<div class="letterBox" id="letterBox">
+  <div class="backArrow" onclick="resetToCars()">←</div>
+  
+
+  Thank you for being with me.<br><br>
+  You truly make my life far better just by existing.<br>
+  I wish we stay together in all the worlds that exist.<br>
+  And may God give you the power to tolerate me your whole life.<br><br>
+
+  I Love You, Pyaaarrrruuuu.<br>
+  You are the most beautiful girl I've ever met from outside and inside as wellll.<br>
+  You are one of the best things that has ever happened to me.<br>
+  Thank you for choosing us again and again and again.<br>
+  I will always love 2024 a little more because of you.<br><br>
+
+  Aaj ke liye itna hi.<br>
+  Apne remarks mere DMs me chhod ke aaiye.<br>
+  Milte hain aapse agle saal.<br>
+  Tab tak ke liye savdhan rahe, satark rahe.<br>
+  Jai Hind.
+</div>
+
+<button id="musicBtn">Play Music</button>
+<audio id="song" src="music.mp3"></audio>
+
+<script>
+function go(p){window.location.href=p}
+
+// ----- CAR 1 QUIZ LOGIC (unchanged) -----
+const questions=[{q:"1. what did i give you at the time of proposal?",opts:["a. thenga","b. bhut hi pyara bracelet","c. normal sa bracelet","d. c choose kiya to pitti kruga"],correct:[1]},{q:"2. What is my fav food that you bring?",opts:["a. Sandwich","b. Pasta","c. Upma","d. UK WHO (huhuhuhuhu)"],correct:[0,1,2,3]},{q:"3. What are your plans with me in future?",opts:["a. bahut pyar kroge","b. Roz sandwich khilaoge","c. roz apne aap ko khilaoge","d. Roz pitti kroge :( ("],correct:[0,1,2,3]},{q:"4. what is your last name?",opts:["a. Shekhar","b. shekhar","c. Shekhar","d. Mayank ki wifey"],correct:[0,1,2,3]},{q:"5. Kya aapke toothpaste me namak hai",opts:["a. Nhi mai brush nhi krti","b. Hai but mai brush nhi krti","c. I love you","d. niche kya aa rhi ho option c select kro"],correct:[2]},{q:"6. Koi bhi complaint jo aapko hai mere se, yahan likh do",text:true}];
+let qi=0;const qText=document.getElementById('qText'),optRow=document.getElementById('optRow'),wrongMsg=document.getElementById('wrongMsg');
+function startQuiz(){hideAll();carRow.style.display='none';title.textContent='driver verification round';quizBox.style.display='block';showQ();}
+function showQ(){wrongMsg.textContent='';const q=questions[qi];qText.textContent=q.q;optRow.innerHTML='';if(q.text){const ta=document.createElement('textarea');optRow.appendChild(ta);const b=document.createElement('button');b.className='optBtn';b.textContent='Submit';b.onclick=finishQuiz;optRow.appendChild(b);return;}q.opts.forEach((t,i)=>{const b=document.createElement('button');b.className='optBtn';b.textContent=t;b.onclick=()=>checkAns(i);optRow.appendChild(b);});}
+function checkAns(i){if(questions[qi].correct.includes(i)){confettiBurst();qi++;if(qi<questions.length)setTimeout(showQ,500);else finishQuiz();}else wrongMsg.textContent='wrong option try again';}
+function finishQuiz(){qText.textContent='all answers accepted. access granted.';optRow.innerHTML='<button class="optBtn" onclick="resetToCars()">Continue</button>';}
+
+// ----- CAR 2 CONTRACT -----
+function startContract(){hideAll();carRow.style.display='none';title.textContent='binding romantic agreement';contractBox.style.display='block';}
+signBox.onclick=()=>{signBox.textContent='Khushi';signBox.classList.add('signed');confettiBurst();setTimeout(()=>{alert('Congratulations! Agreement signed.');resetToCars();},700);};
+
+// ----- CAR 3 LETTER -----
+function startLetter(){hideAll();carRow.style.display='none';title.textContent='';letterBox.style.display='block';}
+
+function hideAll(){quizBox.style.display='none';contractBox.style.display='none';letterBox.style.display='none';}
+function resetToCars(){qi=0;hideAll();carRow.style.display='flex';title.textContent='which car do u choose?';}
+
+function confettiBurst(){for(let i=0;i<40;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=['#ffd6de','#ffffff','#ff9bb3'][Math.floor(Math.random()*3)];document.body.appendChild(c);setTimeout(()=>c.remove(),1200);}}
+
+setInterval(()=>{const h=document.createElement('div');h.className='bg-heart';h.textContent='🤎';h.style.left=Math.random()*100+'vw';h.style.animationDuration=(7+Math.random()*5)+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),12000);},550);
+
+musicBtn.onclick=()=>{if(song.paused){song.play();musicBtn.textContent='Pause Music';}else{song.pause();musicBtn.textContent='Play Music';}};
+</script>
+</body>
+</html>
